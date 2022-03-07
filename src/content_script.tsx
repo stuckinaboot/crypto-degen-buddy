@@ -11,35 +11,16 @@ type HTMLInputType = HTMLTextAreaElement | HTMLInputElement;
 let inputs: (HTMLTextAreaElement | HTMLInputElement)[] = [];
 let addressesSet = new Set<string>();
 let addresses: CryptoAddress = {};
+const inputTypes = ["input", "textarea"];
+const acceptableTagNames = new Set(
+  inputTypes.map((inputType) => inputType.toUpperCase())
+);
+
 async function init() {
   addresses = await getStoredAddresses();
   addressesSet = new Set(Object.keys(addresses));
 }
 init();
-// function refreshInputs() {
-//   console.log("Refreshing inputs");
-//   // inputs = [
-//   //   document.querySelectorAll("input"),
-//   //   document.querySelectorAll("textarea"),
-//   // ];
-
-//   // for (const inputsList of inputs) {
-//   for (const textInput of inputs) {
-//     textInput.addEventListener("input", (e) => {
-//       const val = (e.target as HTMLInputType).value;
-//       console.log("evaluating inputs", Array.from(addressesSet), val);
-//       if (addressesSet.has(val)) {
-//         console.log("HIT ME!!!", val);
-//       }
-//       // Prevents this event from triggering a DOMNodeInserted event
-//       // which happens for some reason
-//       e.stopPropagation();
-//     });
-//     // }
-//   }
-// }
-
-const acceptableTagNames = new Set(["INPUT", "TEXTAREA"]);
 
 document.addEventListener("DOMNodeInserted", (e) => {
   const node = e.target as HTMLElement;
@@ -55,8 +36,6 @@ document.addEventListener("DOMNodeInserted", (e) => {
   if (acceptableTagNames.has(tagName)) {
     inputs.push(node as HTMLInputType);
   }
-
-  const inputTypes = ["input", "textarea"];
 
   inputTypes.forEach((inputType) => {
     const childInputs = node.querySelectorAll(inputType);
@@ -105,7 +84,6 @@ document.addEventListener("DOMNodeInserted", (e) => {
               },
             }
           );
-          // sendResponse({ success: true, address: foundAddress });
         }
         // Prevents this event from triggering a DOMNodeInserted event
         // which happens for some reason
@@ -115,25 +93,15 @@ document.addEventListener("DOMNodeInserted", (e) => {
       inputs.push(childInput as HTMLInputType);
     });
   });
-  // const childInputs = node.querySelectorAll("input");
-  // childInputs.forEach((childInput) => inputs.push(childInput as HTMLInputType));
-  // const childTextAreas = node.querySelectorAll("textarea");
-  // childTextAreas.forEach((childTextArea) =>
-  //   inputs.push(childTextArea as HTMLInputType)
-  // );
 });
-
-// refreshInputs();
 
 chrome.runtime.onMessage.addListener(function (
   msg: { id: string } & any,
   sender,
   sendResponse
 ) {
-  console.log("MSG received", msg);
   if (msg.id === ChromeMessageId.SET_ADDRESSES) {
     addressesSet = new Set(Object.keys(msg.addresses));
-    console.log("SETTING ADDRESSES!", msg.addresses);
     return;
   }
   // Map address to original color for the element the address occurred in
@@ -168,25 +136,18 @@ chrome.runtime.onMessage.addListener(function (
     return false;
   };
 
-  // const validTextInputs = inputs;
-
   // Check if any exist
   const nonZeroInputsList = inputs.length > 0;
-  //   validTextInputs.find(
-  //   (textInputs) => inpu.length > 0
-  // );
   if (nonZeroInputsList == null) {
     sendResponse({ success: false, error: "No inputs available to check" });
     return;
   }
 
-  // for (const inputsList of validTextInputs) {
   for (const textInput of inputs) {
     const verified = processor(textInput);
     if (verified) {
       return;
     }
-    // }
   }
   // Not verified
   sendResponse({
