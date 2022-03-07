@@ -1405,6 +1405,11 @@ co@^4.6.0:
   resolved "https://registry.yarnpkg.com/co/-/co-4.6.0.tgz#6ea6bdf3d853ae54ccb8e47bfa0bf3f9031fb184"
   integrity sha1-bqa989hTrlTMuOR7+gvz+QMfsYQ=
 
+cogo-toast@^4.2.3:
+  version "4.2.3"
+  resolved "https://registry.yarnpkg.com/cogo-toast/-/cogo-toast-4.2.3.tgz#5f91ce8e55c799f74d5e9ba1e39081b148b07f43"
+  integrity sha512-Lp/lPk493MLtkgqHboVJXb5frvLJqUDpIqLh6uCMcNecw0/shikDG+DGsjvmPe5qmorRwxe+6JgfKobRrcvhZQ==
+
 collect-v8-coverage@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/collect-v8-coverage/-/collect-v8-coverage-1.0.1.tgz#cc2c8e94fc18bbdffe64d6534570c8a673b27f59"
@@ -3491,6 +3496,11 @@ uri-js@^4.2.2:
   integrity sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==
   dependencies:
     punycode "^2.1.0"
+
+use-async-effect@^2.2.5:
+  version "2.2.5"
+  resolved "https://registry.yarnpkg.com/use-async-effect/-/use-async-effect-2.2.5.tgz#f58edb50376723ae0ea7674e7428c3f8dde894df"
+  integrity sha512-0TBhYJ0K6aN7jG8niDDO570ZXoCaIjMCryG0FBNvC9RkHqhb4m8LQlTlkhw40sXtZPwNN1QoYkSlCXB4enaFsQ==
 
 util-deprecate@~1.0.1:
   version "1.0.2"

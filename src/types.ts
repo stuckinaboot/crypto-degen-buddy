@@ -9,3 +9,8 @@ export type AddressContentsInputType = {
   contents: CryptoAddressContents;
   deleteAddress: boolean;
 };
+
+export enum ChromeMessageId {
+  SET_ADDRESSES = "set_addresses",
+  OTHER = "other",
+}

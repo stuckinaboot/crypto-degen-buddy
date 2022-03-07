@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import Button from "@mui/material/Button";
-import { CryptoAddress } from "./types";
+import { ChromeMessageId, CryptoAddress } from "./types";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import EditAddresses from "./EditAddresses";
+import useAsyncEffect from "use-async-effect";
+import { getStoredAddresses, setStoredAddresses } from "./storage";
 
 enum Status {
   NONE = "none",
@@ -26,38 +28,102 @@ const Popup = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [addresses, setAddresses] = useState<CryptoAddress>({});
 
-  useEffect(() => {
-    chrome.storage.local.get(CHROME_LOCAL_STORAGE_ADDRESSES_KEY, (result) => {
-      setAddresses(
-        result ? JSON.parse(result[CHROME_LOCAL_STORAGE_ADDRESSES_KEY]) : {}
-      );
+  function sendMessageToActiveTab(
+    msg: { id: ChromeMessageId } & any,
+    callback: (result: any) => void
+  ) {
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      const tab = tabs[0];
+      if (tab.id) {
+        chrome.tabs.sendMessage(tab.id, msg, callback);
+      }
     });
+  }
+
+  useAsyncEffect(async () => {
+    const storedAddresses = await getStoredAddresses();
+    setAddresses(storedAddresses);
+    sendMessageToActiveTab(
+      {
+        id: ChromeMessageId.SET_ADDRESSES,
+        addresses: storedAddresses,
+      },
+      () => {}
+    );
+    // chrome.storage.local.get(CHROME_LOCAL_STORAGE_ADDRESSES_KEY, (result) => {
+    //   const parsedAddresses = result
+    //     ? JSON.parse(result[CHROME_LOCAL_STORAGE_ADDRESSES_KEY])
+    //     : {};
+    //   setAddresses(parsedAddresses);
+    //   sendMessageToActiveTab(
+    //     {
+    //       id: ChromeMessageId.SET_ADDRESSES,
+    //       addresses: parsedAddresses,
+    //     },
+    //     () => {}
+    //   );
+    // });
   }, []);
 
   const performVerify = () => {
     setStatus(Status.NONE);
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-      const tab = tabs[0];
-      if (tab.id) {
-        chrome.tabs.sendMessage(
-          tab.id,
-          { addresses: Object.keys(addresses) },
-          (msg) => {
-            setFoundAddress(msg.address);
-            setStatus(msg.success ? Status.SUCCESS : Status.FAILED);
-            setError(msg.error ?? "");
-          }
-        );
+    sendMessageToActiveTab(
+      {
+        id: ChromeMessageId.OTHER,
+        addresses: Object.keys(addresses),
+      },
+      (msg) => {
+        setFoundAddress(msg.address);
+        setStatus(msg.success ? Status.SUCCESS : Status.FAILED);
+        setError(msg.error ?? "");
       }
-    });
+    );
+    // chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    //   const tab = tabs[0];
+    //   if (tab.id) {
+    //     chrome.tabs.sendMessage(
+    //       tab.id,
+    //       {
+    //         id: ChromeMessageId.OTHER,
+    //         addresses: Object.keys(addresses),
+    //       },
+    //       (msg) => {
+    //         setFoundAddress(msg.address);
+    //         setStatus(msg.success ? Status.SUCCESS : Status.FAILED);
+    //         setError(msg.error ?? "");
+    //       }
+    //     );
+    //   }
+    // });
   };
 
   // Take addresses in as a param so we don't need to be concerned about
   // any React state updates (which may occur to addresses state variable)
   function saveAddressesToLocalStorage(addresses: CryptoAddress) {
-    chrome.storage.local.set({
-      [CHROME_LOCAL_STORAGE_ADDRESSES_KEY]: JSON.stringify(addresses),
-    });
+    setStoredAddresses(addresses);
+    // chrome.storage.local.set({
+    //   [CHROME_LOCAL_STORAGE_ADDRESSES_KEY]: JSON.stringify(addresses),
+    // });
+    sendMessageToActiveTab(
+      {
+        id: ChromeMessageId.SET_ADDRESSES,
+        addresses: Object.keys(addresses),
+      },
+      (msg) => {}
+    );
+    // chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    //   const tab = tabs[0];
+    //   if (tab.id) {
+    //     chrome.tabs.sendMessage(
+    //       tab.id,
+    //       {
+    //         id: ChromeMessageId.SET_ADDRESSES,
+    //         addresses: Object.keys(addresses),
+    //       },
+    //       (msg) => {}
+    //     );
+    //   }
+    // });
   }
 
   return (
