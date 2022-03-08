@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import ReactDOM from "react-dom";
 import Button from "@mui/material/Button";
 import { ChromeMessageId, CryptoAddress } from "./types";
@@ -8,18 +8,13 @@ import Box from "@mui/material/Box";
 import EditAddresses from "./EditAddresses";
 import useAsyncEffect from "use-async-effect";
 import { getStoredAddresses, setStoredAddresses } from "./storage";
+import { VerifiedText } from "./text";
 
 enum Status {
   NONE = "none",
   FAILED = "failed",
   SUCCESS = "success",
 }
-
-// const addresses: CryptoAddress = {
-//   "0xABCD7FB541eFOOE586CARBe4B1B41Bb55293EFGH": { name: "terra" },
-// };
-
-const CHROME_LOCAL_STORAGE_ADDRESSES_KEY = "cryptoAddresses";
 
 const Popup = () => {
   const [foundAddress, setFoundAddress] = useState("");
@@ -50,19 +45,6 @@ const Popup = () => {
       },
       () => {}
     );
-    // chrome.storage.local.get(CHROME_LOCAL_STORAGE_ADDRESSES_KEY, (result) => {
-    //   const parsedAddresses = result
-    //     ? JSON.parse(result[CHROME_LOCAL_STORAGE_ADDRESSES_KEY])
-    //     : {};
-    //   setAddresses(parsedAddresses);
-    //   sendMessageToActiveTab(
-    //     {
-    //       id: ChromeMessageId.SET_ADDRESSES,
-    //       addresses: parsedAddresses,
-    //     },
-    //     () => {}
-    //   );
-    // });
   }, []);
 
   const performVerify = () => {
@@ -78,32 +60,12 @@ const Popup = () => {
         setError(msg.error ?? "");
       }
     );
-    // chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-    //   const tab = tabs[0];
-    //   if (tab.id) {
-    //     chrome.tabs.sendMessage(
-    //       tab.id,
-    //       {
-    //         id: ChromeMessageId.OTHER,
-    //         addresses: Object.keys(addresses),
-    //       },
-    //       (msg) => {
-    //         setFoundAddress(msg.address);
-    //         setStatus(msg.success ? Status.SUCCESS : Status.FAILED);
-    //         setError(msg.error ?? "");
-    //       }
-    //     );
-    //   }
-    // });
   };
 
   // Take addresses in as a param so we don't need to be concerned about
   // any React state updates (which may occur to addresses state variable)
   function saveAddressesToLocalStorage(addresses: CryptoAddress) {
     setStoredAddresses(addresses);
-    // chrome.storage.local.set({
-    //   [CHROME_LOCAL_STORAGE_ADDRESSES_KEY]: JSON.stringify(addresses),
-    // });
     sendMessageToActiveTab(
       {
         id: ChromeMessageId.SET_ADDRESSES,
@@ -111,19 +73,6 @@ const Popup = () => {
       },
       (msg) => {}
     );
-    // chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-    //   const tab = tabs[0];
-    //   if (tab.id) {
-    //     chrome.tabs.sendMessage(
-    //       tab.id,
-    //       {
-    //         id: ChromeMessageId.SET_ADDRESSES,
-    //         addresses: Object.keys(addresses),
-    //       },
-    //       (msg) => {}
-    //     );
-    //   }
-    // });
   }
 
   return (
@@ -186,21 +135,10 @@ const Popup = () => {
             </Grid>
             <Grid item xs={12}>
               {status === Status.SUCCESS ? (
-                <div>
-                  <Typography variant="h5" style={{ color: "green" }}>
-                    Verified!
-                  </Typography>
-                  <Typography>
-                    The following cryptocurrency address was verified and can be
-                    seen in green on your page
-                    <br />
-                    <b>
-                      {addresses[foundAddress].name}
-                      <br />
-                      {foundAddress}
-                    </b>
-                  </Typography>
-                </div>
+                <VerifiedText
+                  verifiedAddress={foundAddress}
+                  addressContents={addresses[foundAddress]}
+                />
               ) : status === Status.FAILED ? (
                 <div>
                   <Typography variant="h5" style={{ color: "red" }}>

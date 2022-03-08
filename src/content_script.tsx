@@ -2,7 +2,7 @@ import { getStoredAddresses } from "./storage";
 import { ChromeMessageId, CryptoAddress } from "./types";
 import cogoToast from "cogo-toast";
 import React from "react";
-import { Typography } from "@mui/material";
+import { VerifiedText } from "./text";
 
 const FOUND_COLOR = "green";
 const colorForAddress: { [address: string]: string } = {};
@@ -21,6 +21,25 @@ async function init() {
   addressesSet = new Set(Object.keys(addresses));
 }
 init();
+
+const verify = (element: HTMLInputElement | HTMLTextAreaElement): boolean => {
+  const eltAddress = element.value;
+  if (addressesSet.has(eltAddress)) {
+    const ogColor = element.style.color;
+    if (ogColor !== FOUND_COLOR) {
+      // This if protects against pressing verify twice in a row
+      // (e.g. having ogColor be FOUND_COLOR and then verify pressed)
+      colorForAddress[eltAddress] = ogColor;
+      element.style.color = FOUND_COLOR;
+      element.addEventListener("input", () => {
+        element.style.color = colorForAddress[eltAddress];
+      });
+    }
+
+    return true;
+  }
+  return false;
+};
 
 document.addEventListener("DOMNodeInserted", (e) => {
   const node = e.target as HTMLElement;
@@ -42,36 +61,15 @@ document.addEventListener("DOMNodeInserted", (e) => {
     childInputs.forEach((childInput) => {
       childInput.addEventListener("input", (e) => {
         const element = e.target as HTMLInputType;
-        const val = element.value;
-        const foundAddress = val;
-        if (addressesSet.has(foundAddress)) {
-          const ogColor = element.style.color;
-          if (ogColor !== FOUND_COLOR) {
-            // This if protects against pressing verify twice in a row
-            // (e.g. having ogColor be FOUND_COLOR and then verify pressed)
-            colorForAddress[foundAddress] = ogColor;
-            element.style.color = FOUND_COLOR;
-            element.addEventListener("input", () => {
-              element.style.color = colorForAddress[foundAddress];
-            });
-          }
+        const verified = verify(element);
 
+        if (verified) {
+          const address = element.value;
           const { hide } = cogoToast.success(
-            <div>
-              <Typography variant="h5" style={{ color: "green" }}>
-                Verified!
-              </Typography>
-              <Typography>
-                The following cryptocurrency address was verified and can be
-                seen in green on your page
-                <br />
-                <b>
-                  {addresses[foundAddress].name}
-                  <br />
-                  {foundAddress}
-                </b>
-              </Typography>
-            </div>,
+            <VerifiedText
+              verifiedAddress={address}
+              addressContents={addresses[address]}
+            />,
             {
               hideAfter:
                 // seconds
@@ -115,27 +113,6 @@ chrome.runtime.onMessage.addListener(function (
     return;
   }
 
-  const processor = (element: HTMLInputElement | HTMLTextAreaElement) => {
-    const foundAddress = cryptoAddresses.find(
-      (address) => element.value === address
-    );
-    if (foundAddress != null) {
-      const ogColor = element.style.color;
-      if (ogColor !== FOUND_COLOR) {
-        // This if protects against pressing verify twice in a row
-        // (e.g. having ogColor be FOUND_COLOR and then verify pressed)
-        colorForAddress[foundAddress] = ogColor;
-        element.style.color = FOUND_COLOR;
-        element.addEventListener("input", () => {
-          element.style.color = colorForAddress[foundAddress];
-        });
-      }
-      sendResponse({ success: true, address: foundAddress });
-      return true;
-    }
-    return false;
-  };
-
   // Check if any exist
   const nonZeroInputsList = inputs.length > 0;
   if (nonZeroInputsList == null) {
@@ -144,8 +121,9 @@ chrome.runtime.onMessage.addListener(function (
   }
 
   for (const textInput of inputs) {
-    const verified = processor(textInput);
+    const verified = verify(textInput);
     if (verified) {
+      sendResponse({ success: true, address: textInput.value });
       return;
     }
   }
