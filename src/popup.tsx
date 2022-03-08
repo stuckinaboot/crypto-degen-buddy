@@ -8,7 +8,7 @@ import Box from "@mui/material/Box";
 import EditAddresses from "./address-book/EditAddresses";
 import useAsyncEffect from "use-async-effect";
 import { getStoredAddresses, setStoredAddresses } from "./helpers/storage";
-import { VerifiedText } from "./helpers/text";
+import { AppName, VerifiedText } from "./helpers/text";
 
 enum Status {
   NONE = "none",
@@ -79,7 +79,9 @@ const Popup = () => {
     <Grid container style={{ minWidth: "400px", textAlign: "center" }}>
       <Grid item xs={12}>
         <Grid item xs={12}>
-          <Typography variant="h6">Crypto Address Verifier</Typography>
+          <Typography variant="h6">
+            <AppName />
+          </Typography>
         </Grid>
         {isEditing ? (
           <EditAddresses

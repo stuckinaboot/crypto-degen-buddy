@@ -5,6 +5,8 @@ import React from "react";
 import { VerifiedText } from "./helpers/text";
 
 const FOUND_COLOR = "green";
+// Map address to original color for the element the address occurred in
+// Note: if address occurs in multiple inputs this could get messed up
 const colorForAddress: { [address: string]: string } = {};
 
 type HTMLInputType = HTMLTextAreaElement | HTMLInputElement;
@@ -102,31 +104,25 @@ chrome.runtime.onMessage.addListener(function (
     refreshSavedAddresses();
     return;
   }
-  // Map address to original color for the element the address occurred in
-  // Note: if address occurs in multiple inputs this could get messed up
-  const cryptoAddresses: string[] = msg.addresses;
-  addressesSet = new Set(cryptoAddresses);
 
   // Ensure some addresses exist in order to continue processing
-  if (cryptoAddresses.length === 0) {
+  if (addressesSet.size === 0) {
     sendResponse({ success: false, error: "No saved addresses" });
     return;
   }
 
   // Check if any exist
-  const nonZeroInputsList = inputs.length > 0;
-  if (nonZeroInputsList == null) {
+  if (inputs.length === 0) {
     sendResponse({ success: false, error: "No inputs available to check" });
     return;
   }
 
-  for (const textInput of inputs) {
-    const verified = verify(textInput);
-    if (verified) {
-      sendResponse({ success: true, address: textInput.value });
-      return;
-    }
+  const verifiedTextInput = inputs.find((textInput) => verify(textInput));
+  if (verifiedTextInput != null) {
+    sendResponse({ success: true, address: verifiedTextInput.value });
+    return;
   }
+
   // Not verified
   sendResponse({
     success: false,
