@@ -16,11 +16,11 @@ const acceptableTagNames = new Set(
   inputTypes.map((inputType) => inputType.toUpperCase())
 );
 
-async function init() {
+async function refreshSavedAddresses() {
   addresses = await getStoredAddresses();
   addressesSet = new Set(Object.keys(addresses));
 }
-init();
+refreshSavedAddresses();
 
 const verify = (element: HTMLInputElement | HTMLTextAreaElement): boolean => {
   const eltAddress = element.value;
@@ -99,7 +99,7 @@ chrome.runtime.onMessage.addListener(function (
   sendResponse
 ) {
   if (msg.id === ChromeMessageId.SET_ADDRESSES) {
-    addressesSet = new Set(Object.keys(msg.addresses));
+    refreshSavedAddresses();
     return;
   }
   // Map address to original color for the element the address occurred in
