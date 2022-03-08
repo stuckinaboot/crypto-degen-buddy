@@ -12,7 +12,7 @@ import {
 import Grid from "@mui/material/Grid";
 import React, { useState } from "react";
 import EditAddress from "./EditAddress";
-import { AddressContentsInputType, CryptoAddress } from "./types";
+import { AddressContentsInputType, CryptoAddress } from "../types";
 
 export default function EditAddresses(props: {
   addresses: CryptoAddress;

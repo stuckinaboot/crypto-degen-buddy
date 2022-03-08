@@ -1,8 +1,8 @@
-import { getStoredAddresses } from "./storage";
+import { getStoredAddresses } from "./helpers/storage";
 import { ChromeMessageId, CryptoAddress } from "./types";
 import cogoToast from "cogo-toast";
 import React from "react";
-import { VerifiedText } from "./text";
+import { VerifiedText } from "./helpers/text";
 
 const FOUND_COLOR = "green";
 const colorForAddress: { [address: string]: string } = {};

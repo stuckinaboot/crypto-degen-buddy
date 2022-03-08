@@ -1,4 +1,4 @@
-import { CryptoAddress } from "./types";
+import { CryptoAddress } from "../types";
 
 const CHROME_LOCAL_STORAGE_ADDRESSES_KEY = "cryptoAddresses";
 

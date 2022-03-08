@@ -5,10 +5,10 @@ import { ChromeMessageId, CryptoAddress } from "./types";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import EditAddresses from "./EditAddresses";
+import EditAddresses from "./address-book/EditAddresses";
 import useAsyncEffect from "use-async-effect";
-import { getStoredAddresses, setStoredAddresses } from "./storage";
-import { VerifiedText } from "./text";
+import { getStoredAddresses, setStoredAddresses } from "./helpers/storage";
+import { VerifiedText } from "./helpers/text";
 
 enum Status {
   NONE = "none",

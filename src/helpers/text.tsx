@@ -1,6 +1,6 @@
 import { Typography } from "@mui/material";
 import React from "react";
-import { CryptoAddressContents } from "./types";
+import { CryptoAddressContents } from "../types";
 
 export function VerifiedText({
   verifiedAddress,

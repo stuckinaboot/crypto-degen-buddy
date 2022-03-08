@@ -1,7 +1,7 @@
 import { Box, Button, TextField } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import React, { useState } from "react";
-import { AddressContentsInputType, CryptoAddressContents } from "./types";
+import { AddressContentsInputType, CryptoAddressContents } from "../types";
 
 export default function EditAddress(props: {
   address: string;
