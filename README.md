@@ -1,36 +1,27 @@
 # Chrome Extension TypeScript Starter
 
-![build](https://github.com/chibat/chrome-extension-typescript-starter/workflows/build/badge.svg)
+Sending cryptocurrency between various dapps and exchanges is scary. This extension allows you to create an addressbook of your verified correct addresses and will allow you to seamlessly verify that the cryptocurrency address you inputted onto the current page matches one from your addressbook
 
-Chrome Extension, TypeScript and Visual Studio Code
+## Features
+
+- Create, edit, and remove verified cryptocurrency addresses
+- Check in realtime if cryptocurrency addresses you inputted on the current tab are verified (a toast will display if the address is)
+- Verify button in the chrome extension popup that allows you to double check the cryptocurrency address you inputted on the current tab is verified
+
+# Local development
 
 ## Prerequisites
 
-* [node + npm](https://nodejs.org/) (Current Version)
+- [node + npm](https://nodejs.org/) (Current Version)
 
 ## Option
 
-* [Visual Studio Code](https://code.visualstudio.com/)
-
-## Includes the following
-
-* TypeScript
-* Webpack
-* React
-* Jest
-* Example Code
-    * Chrome Storage
-    * Options Version 2
-    * content script
-    * count up badge number
-    * background
+- [Visual Studio Code](https://code.visualstudio.com/)
 
 ## Project Structure
 
-* src/typescript: TypeScript source files
-* src/assets: static files
-* dist: Chrome Extension directory
-* dist/js: Generated JavaScript files
+- dist: Chrome Extension directory
+- dist/js: Generated JavaScript files
 
 ## Setup
 
@@ -66,5 +57,10 @@ type `Ctrl + Shift + B`
 
 Load `dist` directory
 
-## Test
-`npx jest` or `npm run test`
+## Credits
+
+Based on the following template https://github.com/chibat/chrome-extension-typescript-starter/
+
+## Disclaimer
+
+Please read the LICENSE. If you use this code or the chrome extension, you are agreeing to the LICENSE included in this github repo.
