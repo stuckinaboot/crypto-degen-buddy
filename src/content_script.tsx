@@ -85,9 +85,6 @@ document.addEventListener("DOMNodeInserted", (e) => {
             }
           );
         }
-        // Prevents this event from triggering a DOMNodeInserted event
-        // which happens for some reason
-        e.stopPropagation();
       });
 
       inputs.push(childInput as HTMLInputType);
