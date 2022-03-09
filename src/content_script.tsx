@@ -5,17 +5,17 @@ import React from "react";
 import { VerifiedText } from "./helpers/text";
 
 const FOUND_COLOR = "green";
+const TRACKED_INPUT_TYPES = ["input", "textarea"];
 // Map address to original color for the element the address occurred in
 // Note: if address occurs in multiple inputs this could get messed up
 const colorForAddress: { [address: string]: string } = {};
 
 type HTMLInputType = HTMLTextAreaElement | HTMLInputElement;
-let inputs: (HTMLTextAreaElement | HTMLInputElement)[] = [];
+const inputs: (HTMLTextAreaElement | HTMLInputElement)[] = [];
 let addressesSet = new Set<string>();
 let addresses: CryptoAddress = {};
-const inputTypes = ["input", "textarea"];
 const acceptableTagNames = new Set(
-  inputTypes.map((inputType) => inputType.toUpperCase())
+  TRACKED_INPUT_TYPES.map((inputType) => inputType.toUpperCase())
 );
 
 async function refreshSavedAddresses() {
@@ -26,31 +26,28 @@ refreshSavedAddresses();
 
 const verify = (element: HTMLInputElement | HTMLTextAreaElement): boolean => {
   const eltAddress = element.value;
-  if (addressesSet.has(eltAddress)) {
-    const ogColor = element.style.color;
-    if (ogColor !== FOUND_COLOR) {
-      // This if protects against pressing verify twice in a row
-      // (e.g. having ogColor be FOUND_COLOR and then verify pressed)
-      colorForAddress[eltAddress] = ogColor;
-      element.style.color = FOUND_COLOR;
-      element.addEventListener(
-        "input",
-        () => {
-          element.style.color = colorForAddress[eltAddress];
-        },
-        // Only run this listener for first input after match
-        { once: true }
-      );
-    }
-
-    return true;
+  if (!addressesSet.has(eltAddress)) {
+    return false;
   }
-  return false;
+  const ogColor = element.style.color;
+  if (ogColor !== FOUND_COLOR) {
+    // This if protects against pressing verify twice in a row
+    // (e.g. having ogColor be FOUND_COLOR and then verify pressed)
+    colorForAddress[eltAddress] = ogColor;
+    element.style.color = FOUND_COLOR;
+    element.addEventListener(
+      "input",
+      () => (element.style.color = colorForAddress[eltAddress]),
+      // Only run this listener for first input after match
+      { once: true }
+    );
+  }
+
+  return true;
 };
 
 document.addEventListener("DOMNodeInserted", (e) => {
   const node = e.target as HTMLElement;
-
   if (node == null) {
     return;
   }
@@ -63,33 +60,34 @@ document.addEventListener("DOMNodeInserted", (e) => {
     inputs.push(node as HTMLInputType);
   }
 
-  inputTypes.forEach((inputType) => {
+  TRACKED_INPUT_TYPES.forEach((inputType) => {
     const childInputs = node.querySelectorAll(inputType);
     childInputs.forEach((childInput) => {
       childInput.addEventListener("input", (e) => {
         const element = e.target as HTMLInputType;
         const verified = verify(element);
 
-        if (verified) {
-          const address = element.value;
-          const { hide } = cogoToast.success(
-            <VerifiedText
-              verifiedAddress={address}
-              addressContents={addresses[address]}
-            />,
-            {
-              hideAfter:
-                // seconds
-                10,
-              onClick: () => {
-                if (hide == null) {
-                  return;
-                }
-                hide();
-              },
-            }
-          );
+        if (!verified) {
+          return;
         }
+        const address = element.value;
+        const { hide } = cogoToast.success(
+          <VerifiedText
+            verifiedAddress={address}
+            addressContents={addresses[address]}
+          />,
+          {
+            hideAfter:
+              // seconds
+              10,
+            onClick: () => {
+              if (hide == null) {
+                return;
+              }
+              hide();
+            },
+          }
+        );
       });
 
       inputs.push(childInput as HTMLInputType);
@@ -99,7 +97,7 @@ document.addEventListener("DOMNodeInserted", (e) => {
 
 chrome.runtime.onMessage.addListener(function (
   msg: { id: string } & any,
-  sender,
+  _sender,
   sendResponse
 ) {
   if (msg.id === ChromeMessageId.SET_ADDRESSES) {

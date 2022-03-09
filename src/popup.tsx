@@ -25,7 +25,7 @@ const Popup = () => {
 
   function sendMessageToActiveTab(
     msg: { id: ChromeMessageId } & any,
-    callback: (result: any) => void
+    callback?: (result: any) => void
   ) {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
       const tab = tabs[0];
@@ -38,13 +38,10 @@ const Popup = () => {
   useAsyncEffect(async () => {
     const storedAddresses = await getStoredAddresses();
     setAddresses(storedAddresses);
-    sendMessageToActiveTab(
-      {
-        id: ChromeMessageId.SET_ADDRESSES,
-        addresses: storedAddresses,
-      },
-      () => {}
-    );
+    sendMessageToActiveTab({
+      id: ChromeMessageId.SET_ADDRESSES,
+      addresses: storedAddresses,
+    });
   }, []);
 
   const performVerify = () => {
@@ -66,13 +63,10 @@ const Popup = () => {
   // any React state updates (which may occur to addresses state variable)
   function saveAddressesToLocalStorage(addresses: CryptoAddress) {
     setStoredAddresses(addresses);
-    sendMessageToActiveTab(
-      {
-        id: ChromeMessageId.SET_ADDRESSES,
-        addresses: Object.keys(addresses),
-      },
-      (msg) => {}
-    );
+    sendMessageToActiveTab({
+      id: ChromeMessageId.SET_ADDRESSES,
+      addresses: Object.keys(addresses),
+    });
   }
 
   return (

@@ -29,5 +29,5 @@ export function VerifiedText({
 }
 
 export function AppName(): React.ReactElement {
-  return <>Crypto Address Verifier</>;
+  return <>Crypto Degen Buddy</>;
 }
