@@ -33,9 +33,14 @@ const verify = (element: HTMLInputElement | HTMLTextAreaElement): boolean => {
       // (e.g. having ogColor be FOUND_COLOR and then verify pressed)
       colorForAddress[eltAddress] = ogColor;
       element.style.color = FOUND_COLOR;
-      element.addEventListener("input", () => {
-        element.style.color = colorForAddress[eltAddress];
-      });
+      element.addEventListener(
+        "input",
+        () => {
+          element.style.color = colorForAddress[eltAddress];
+        },
+        // Only run this listener for first input after match
+        { once: true }
+      );
     }
 
     return true;
