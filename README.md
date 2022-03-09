@@ -63,4 +63,6 @@ Based on the following template https://github.com/chibat/chrome-extension-types
 
 ## Disclaimer
 
-Please read the LICENSE. If you use this code or the chrome extension, you are agreeing to the LICENSE included in this github repo.
+This repo was made in good faith as the contributors to this repo want this to be as useful as possible for the community. Please read the below for a short disclaimer.
+
+Please read the LICENSE. By using this code and/or any application and/or web extension derived from this code, you are agreeing to the LICENSE included in this github repo. No contributor to this repo bares responsibility for anything that may happen to you while using this code/application/web extension; we bare no responsibility if this code/application/web extension in its current or in any derivatives results in you losing crypto or anything else. Always double-check you input the correct cryptocurrency addresses when sending cryptocurrency/NFTs/etc.
