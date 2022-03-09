@@ -1,6 +1,6 @@
 # Crypto Degen Buddy
 
-Whether your new to crypto or a seasoned degen, sending cryptocurrency between various dapps and exchanges is scary. This extension allows you to create an addressbook of your verified correct addresses and will allow you to seamlessly verify that the cryptocurrency address you inputted onto the current page matches one from your addressbook
+Whether you're new to crypto or a seasoned degen, sending cryptocurrency between various dapps and exchanges is scary. This extension allows you to create an addressbook of your verified correct addresses and will allow you to seamlessly verify that the cryptocurrency address you inputted onto the current page matches one from your addressbook
 
 ## Features
 
