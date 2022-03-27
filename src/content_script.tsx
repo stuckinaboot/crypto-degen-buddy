@@ -126,6 +126,6 @@ chrome.runtime.onMessage.addListener(function (
   // Not verified
   sendResponse({
     success: false,
-    error: "No saved addresses matched any input field values",
+    error: "No values on this page match with any of your saved addresses.",
   });
 });
