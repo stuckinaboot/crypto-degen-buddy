@@ -107,13 +107,13 @@ chrome.runtime.onMessage.addListener(function (
 
   // Ensure some addresses exist in order to continue processing
   if (addressesSet.size === 0) {
-    sendResponse({ success: false, error: "No saved addresses" });
+    sendResponse({ success: false, error: "You have not saved any addresses. Click \"Edit Addresses\"." });
     return;
   }
 
   // Check if any exist
   if (inputs.length === 0) {
-    sendResponse({ success: false, error: "No inputs available to check" });
+    sendResponse({ success: false, error: "There are no crypto addresses inputted on this open tab. Click \"Verify Address\" to try again." });
     return;
   }
 

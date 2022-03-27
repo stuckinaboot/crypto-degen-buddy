@@ -1,4 +1,4 @@
-import { Box, Button, TextField } from "@mui/material";
+import { Box, Button, TextField, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import React, { useState } from "react";
 import { AddressContentsInputType, CryptoAddressContents } from "../types";
@@ -25,6 +25,9 @@ export default function EditAddress(props: {
     <Grid container>
       <Grid item xs={12}>
         <Grid item xs={12}>
+          <Typography variant="caption" paddingBottom={"8px"} paddingTop="4px">
+            Type in your trusted addresses.
+          </Typography>
           <TextField
             label="Address"
             value={addressVal}
@@ -42,15 +45,13 @@ export default function EditAddress(props: {
         </Grid>
         <br />
         <br />
-        <Button onClick={() => save(false)} variant="outlined">
+        <Button onClick={() => save(false)} variant="contained" style={{marginRight:"4px"}}>
           Save
         </Button>
-        <br />
-        <br />
-        <br />
         <Button onClick={() => save(true)} color="error" variant="outlined">
           {props.isUpdatingExisting ? "Delete" : "Cancel"}
         </Button>
+        
       </Grid>
     </Grid>
   );

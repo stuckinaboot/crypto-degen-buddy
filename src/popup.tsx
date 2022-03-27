@@ -70,7 +70,7 @@ const Popup = () => {
   }
 
   return (
-    <Grid container style={{ minWidth: "400px", textAlign: "center" }}>
+    <Grid container style={{ minWidth: "400px", textAlign: "center", borderRadius:"0.5rem" }} paddingX="16px" paddingY="8px">
       <Grid item xs={12}>
         <Grid item xs={12}>
           <Typography variant="h6">
@@ -104,19 +104,16 @@ const Popup = () => {
         ) : (
           <Grid item xs={12}>
             <Grid item xs={12}>
-              <Typography variant="caption">
+              <Typography paddingTop={"8px"} paddingBottom={"16px"} variant="body1">
                 Press "Verify Address" to check if the crypto address you
-                inputted on the open tab is one of your saved addresses
-                <br />
-                <br />
-                Press "Edit addresses" to edit your saved addresses
+                inputted on the open tab is one of your saved addresses.
               </Typography>
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} style={{display: "flex", justifyItems:"center"}}>
               <Button
                 onClick={performVerify}
-                variant="outlined"
-                style={{ width: "100%" }}
+                variant="contained"
+                style={{ width: "60%" }}
               >
                 Verify address
               </Button>
@@ -124,7 +121,7 @@ const Popup = () => {
               <Button
                 onClick={() => setIsEditing(true)}
                 variant="outlined"
-                style={{ width: "100%" }}
+                style={{ width: "60%" }}
               >
                 Edit addresses
               </Button>
@@ -136,15 +133,16 @@ const Popup = () => {
                   addressContents={addresses[foundAddress]}
                 />
               ) : status === Status.FAILED ? (
-                <div>
+                <Grid item xs={12} paddingTop="16px">
+                  <hr/>
                   <Typography variant="h5" style={{ color: "red" }}>
                     Failed!
                   </Typography>
-                  <Typography>
+                  <Typography paddingTop="4px">
                     {error ||
                       "No saved addresses matched any input addresses on this page"}
                   </Typography>
-                </div>
+                </Grid>
               ) : null}
             </Grid>
           </Grid>

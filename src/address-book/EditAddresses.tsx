@@ -65,12 +65,9 @@ export default function EditAddresses(props: {
           </TableContainer>
           <Box m={1} />
           <Grid item xs={12} style={{ width: "100%" }}>
-            <Button onClick={() => setEditing("")} variant="outlined">
+            <Button onClick={() => setEditing("")} variant="contained" style={{marginRight:"4px"}}>
               Add new
             </Button>
-          </Grid>
-          <Box m={1} />
-          <Grid item xs={12} style={{ width: "100%" }}>
             <Button onClick={props.onDone} variant="outlined">
               Done editing
             </Button>
