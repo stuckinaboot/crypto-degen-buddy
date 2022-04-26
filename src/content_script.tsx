@@ -118,8 +118,9 @@ chrome.runtime.onMessage.addListener(function (
   }
 
   const verifiedTextInput = inputs.find((textInput) => verify(textInput));
-  if (verifiedTextInput != null) {
-    sendResponse({ success: true, address: verifiedTextInput.value });
+  // verifiedTextInput returns as {} when find fails for some reason.
+  if (Object.keys(verifiedTextInput as Object).length > 0)  {
+    sendResponse({ success: true, address: verifiedTextInput });
     return;
   }
 
